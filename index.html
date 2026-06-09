@@ -91,10 +91,18 @@ h1{
 <script>
 const api = "https://script.google.com/macros/s/AKfycbz0WjBaP8kjfQIeeqLV-Yk9n6Vx4pda2qmgIWS8PV8KolAUK-CPV-tbpTR_5uqc77-u/exec";
 
-fetch(api)
-  .then(response => response.json())
+fetch(api + "?t=" + Date.now())  .then(response => response.json())
   .then(data => {
-    document.getElementById("date").innerText = data.date;
+    const todayParis = new Date().toLocaleDateString("fr-FR", {
+  timeZone: "Europe/Paris",
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+  year: "numeric"
+});
+
+document.getElementById("date").innerText =
+  todayParis.charAt(0).toUpperCase() + todayParis.slice(1);
 
     let html = "";
 
