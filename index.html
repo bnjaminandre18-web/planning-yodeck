@@ -2,94 +2,124 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="refresh" content="300">
 
 <style>
-
 body{
-    background:#f4f6f8;
-    font-family:Arial;
-    padding:40px;
+  margin:0;
+  background:#f4f6f8;
+  font-family:Arial,sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.container{
+  width:90%;
+  max-width:1400px;
+}
+
+.header{
+  text-align:center;
+  margin-bottom:40px;
 }
 
 h1{
-    font-size:60px;
+  font-size:60px;
+  margin:0;
 }
 
 .date{
-    font-size:36px;
-    color:#2563eb;
-    margin-bottom:30px;
+  font-size:40px;
+  font-weight:bold;
+  color:#2563eb;
+  margin-top:10px;
 }
 
 .item{
-    padding:20px;
-    border-radius:15px;
-    margin-bottom:15px;
-    font-size:34px;
-    font-weight:bold;
+  font-size:42px;
+  font-weight:bold;
+  padding:22px 30px;
+  margin-bottom:18px;
+  border-radius:18px;
+  box-shadow:0 6px 16px rgba(0,0,0,0.10);
 }
 
 .conges{
-    background:#f59e0b;
-    color:white;
+  background:#f59e0b;
+  color:white;
 }
 
 .absent{
-    background:#fed7aa;
+  background:#fed7aa;
+  color:#7c2d12;
 }
 
 .absentGroupe{
-    background:#fde68a;
+  background:#fde68a;
+  color:#78350f;
 }
 
 .autre{
-    background:#fbcfe8;
+  background:#fbcfe8;
+  color:#831843;
 }
 
+.empty{
+  background:#dcfce7;
+  color:#166534;
+  font-size:42px;
+  font-weight:bold;
+  text-align:center;
+  padding:30px;
+  border-radius:18px;
+}
 </style>
-
 </head>
 
 <body>
+<div class="container">
+  <div class="header">
+    <h1>Planning du jour</h1>
+    <div id="date" class="date"></div>
+  </div>
 
-<h1>Planning du jour</h1>
-
-<div id="content"></div>
+  <div id="content"></div>
+</div>
 
 <script>
-
-const api =
-"https://script.google.com/macros/s/AKfycbya9xS1g3L4gIgKiq38N7cOzAQ70Vx0pehjAYqf18WXSfCHBaAIxQH4bjrMrwVlrgcQ/exec";
+const api = "https://script.google.com/macros/s/AKfycbz0WjBaP8kjfQIeeqLV-Yk9n6Vx4pda2qmgIWS8PV8KolAUK-CPV-tbpTR_5uqc77-u/exec";
 
 fetch(api)
-.then(r=>r.json())
-.then(data=>{
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById("date").innerText = data.date;
 
-    let html =
-    `<div class="date">${data.date}</div>`;
+    let html = "";
 
-    data.conges.forEach(x=>{
-        html += `<div class="item conges">${x}</div>`;
+    data.conges.forEach(item => {
+      html += `<div class="item conges">${item}</div>`;
     });
 
-    data.absents.forEach(x=>{
-
-        html += `
-        <div class="item ${
-            x.groupe ? "absentGroupe" : "absent"
-        }">
-        ${x.nom}
-        </div>`;
+    data.absents.forEach(item => {
+      html += `<div class="item ${item.groupe ? "absentGroupe" : "absent"}">${item.nom}</div>`;
     });
 
-    data.autres.forEach(x=>{
-        html += `<div class="item autre">${x}</div>`;
+    data.autres.forEach(item => {
+      html += `<div class="item autre">${item}</div>`;
     });
+
+    if (!html) {
+      html = `<div class="empty">Aucun congé, absence ou événement aujourd'hui</div>`;
+    }
 
     document.getElementById("content").innerHTML = html;
-});
-
+  })
+  .catch(error => {
+    document.getElementById("content").innerHTML =
+      `<div class="empty">Erreur de chargement du planning</div>`;
+  });
 </script>
-
 </body>
 </html>
