@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<style>
+
+body{
+    background:#f4f6f8;
+    font-family:Arial;
+    padding:40px;
+}
+
+h1{
+    font-size:60px;
+}
+
+.date{
+    font-size:36px;
+    color:#2563eb;
+    margin-bottom:30px;
+}
+
+.item{
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:15px;
+    font-size:34px;
+    font-weight:bold;
+}
+
+.conges{
+    background:#f59e0b;
+    color:white;
+}
+
+.absent{
+    background:#fed7aa;
+}
+
+.absentGroupe{
+    background:#fde68a;
+}
+
+.autre{
+    background:#fbcfe8;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Planning du jour</h1>
+
+<div id="content"></div>
+
+<script>
+
+const api =
+"https://script.google.com/macros/s/AKfycbya9xS1g3L4gIgKiq38N7cOzAQ70Vx0pehjAYqf18WXSfCHBaAIxQH4bjrMrwVlrgcQ/exec";
+
+fetch(api)
+.then(r=>r.json())
+.then(data=>{
+
+    let html =
+    `<div class="date">${data.date}</div>`;
+
+    data.conges.forEach(x=>{
+        html += `<div class="item conges">${x}</div>`;
+    });
+
+    data.absents.forEach(x=>{
+
+        html += `
+        <div class="item ${
+            x.groupe ? "absentGroupe" : "absent"
+        }">
+        ${x.nom}
+        </div>`;
+    });
+
+    data.autres.forEach(x=>{
+        html += `<div class="item autre">${x}</div>`;
+    });
+
+    document.getElementById("content").innerHTML = html;
+});
+
+</script>
+
+</body>
+</html>
